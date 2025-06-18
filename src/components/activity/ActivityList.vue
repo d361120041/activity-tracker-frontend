@@ -13,7 +13,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr v-for="activity in activities">
+            <tr v-for="activity in activityStore.activities">
                 <td>{{ activity.activityDate }}</td>
                 <td>{{ activity.title }}</td>
                 <td>{{ activity.category }}</td>
@@ -22,15 +22,21 @@
                 <td>{{ activity.notes }}</td>
                 <td>{{ activity.mood }}</td>
                 <td><span class="material-symbols-outlined">edit</span></td>
-                <td><span class="material-symbols-outlined">delete</span></td>
+                <td><span class="material-symbols-outlined" @click="deleteAnActivity(activity.id)">delete</span></td>
             </tr>
         </tbody>
     </table>
 </template>
 
 <script setup>
-const props = defineProps(['activities'])
+import { useActivityStore } from '@/stores/ActivityStore'
 
+const activityStore = useActivityStore()
+
+function deleteAnActivity(id) {
+    activityStore.deleteAnActivity(id)
+    activityStore.getActivitiesByDate()
+}
 </script>
 
 <style scoped>
@@ -63,6 +69,6 @@ td span:hover {
 
 td span:active {
     transform: scale(1) translateY(0);
-    cursor: pointer;    
+    cursor: pointer;
 }
 </style>

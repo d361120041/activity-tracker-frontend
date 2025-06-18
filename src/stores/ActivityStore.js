@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
+import { useDateFormatter } from '@/composables/useDateFormatter'
 
 import api from '@/api/api.js'
 
@@ -8,7 +9,8 @@ export const useActivityStore = defineStore('activity', () => {
     const loading = ref(false)
     const error = ref(null)
 
-    const activityDate = ref(new Date().toISOString().slice(0, 10))
+    const { getFormattedDate } = useDateFormatter()
+    const activityDate = ref(getFormattedDate())
 
     async function getActivitiesByDate() {
         loading.value = true

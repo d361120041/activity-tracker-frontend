@@ -46,11 +46,14 @@
 import { ref, onMounted } from 'vue'
 import { useActivityStore } from '@/stores/ActivityStore'
 import { useModalStore } from '@/stores/ModalStore'
+import { useDateFormatter } from '@/composables/useDateFormatter'
 
 import Modal from '@/components/Modal.vue'
 
 const activityStore = useActivityStore()
 const modalStore = useModalStore()
+
+const { getFormattedDate } = useDateFormatter()
 
 const date = ref('')
 const title = ref('')
@@ -82,7 +85,7 @@ async function createAnActivity() {
 }
 
 function resetForm() {
-    date.value = new Date().toISOString().slice(0, 10)
+    date.value = getFormattedDate()
     title.value = ''
     category.value = ''
     startTime.value = ''
@@ -92,7 +95,7 @@ function resetForm() {
 }
 
 onMounted(() => {
-    date.value = new Date().toISOString().slice(0, 10)
+    date.value = getFormattedDate()
 })
 </script>
 

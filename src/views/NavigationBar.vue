@@ -1,22 +1,20 @@
 <template>
     <nav class="nav-container">
         <div class="logo-container">
-            <router-link to="/">
+            <router-link to="/activity/home">
                 <img src="@/assets/pichu.png" alt="pichu-logo">
             </router-link>
         </div>
         <div class="nav-content">
             <ul>
                 <li class="nav-item">
-                    <router-link to="/">首頁</router-link>
-                </li>
-                <li class="nav-item">
-                    <router-link to="/activity">我的活動</router-link>
+                    <router-link to="/activity/home">我的活動</router-link>
                 </li>
             </ul>
         </div>
         <div class="login-container">
-            <button>登入</button>
+            <router-link to="/user/login">登入</router-link>
+            <router-link to="/user/register">註冊</router-link>
         </div>
     </nav>
 </template>
@@ -69,7 +67,7 @@
     box-shadow: none;
 }
 
-.login-container button {
+.login-container a {
     padding: 8px 15px;
     margin: 0 10px;
     border: none;
@@ -77,13 +75,14 @@
     cursor: pointer;
     background-color: #AA7bff;
     color: white;
+    text-decoration: none;
 }
 
-.login-container button:hover {
+.login-container a:hover {
     background-color: #BB7bff;
 }
 
-.login-container button:active {
+.login-container a:active {
     background-color: #AA7bff;
 }
 </style>

@@ -1,40 +1,37 @@
 <template>
-    <header class="app-header">
-        <NavigationBar></NavigationBar>
-    </header>
+    <div class="app-container">
+        <header class="app-header">
+            <NavigationBar></NavigationBar>
+        </header>
 
-    <main>
-        <router-view></router-view>
-    </main>
+        <main>
+            <router-view></router-view>
+        </main>
 
-    <footer>
-
-    </footer>
+        <footer class="app-footer"></footer>
+    </div>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
-import { useActivityStore } from '@/stores/ActivityStore'
-import { useDateFormatter } from '@/composables/useDateFormatter'
-
 import NavigationBar from '@/views/NavigationBar.vue'
 
-const activityStore = useActivityStore()
-const { getFormattedDate } = useDateFormatter()
-
-const today = getFormattedDate()
-const selectedDate = ref(null)
-
-function searchActivityByDate() {
-    activityStore.getActivitiesByDate(selectedDate.value)
-    selectedDate.value = null
-}
-
-onMounted(() => {
-    activityStore.getActivitiesByDate(today)
-})
 </script>
 
 <style scoped>
+.app-container {
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    min-height: 100vh;
+}
 
+.app-header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.app-footer {
+    position: sticky;
+    bottom: 0;
+}
 </style>

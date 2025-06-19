@@ -71,7 +71,7 @@ onMounted(() => {
 }
 
 .add-activity-button span {
-    border: 2px solid black;
+    border: 2px solid #333;
     background-color: #fff;
 }
 

@@ -58,7 +58,7 @@ async function deleteAnActivity(id, date) {
 <style scoped>
 table {
     margin: 0 auto;
-    box-shadow: 0 0.5px 5px 1px #CCC;
+    box-shadow: 0 0.5px 5px #CCC;
 }
 
 table,

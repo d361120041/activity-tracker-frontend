@@ -1,7 +1,7 @@
 <template>
-    <modal v-model:isVisible="modalStore.isAddActivityModalOpen" :closeOnOverlayClick="true">
+    <modal v-model:isVisible="modalStore.isEditActivityModalOpen" :closeOnOverlayClick="true">
         <template #header>
-            <h2>新增活動</h2>
+            <h2>編輯活動</h2>
         </template>
 
         <form class="activity-form">
@@ -36,51 +36,56 @@
         </form>
 
         <template #footer>
-            <button @click="createAnActivity">建立活動</button>
-            <button @click="modalStore.closeAddActivityModal">取消</button>
+            <button @click="updateAnActivity">修改活動</button>
+            <button @click="modalStore.closeEditActivityModal">取消</button>
         </template>
     </modal>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref } from 'vue'
 import { useActivityStore } from '@/stores/ActivityStore'
 import { useModalStore } from '@/stores/ModalStore'
 import { useDateFormatter } from '@/composables/useDateFormatter'
 
+import api from '@/api/api.js'
 import Modal from '@/components/Modal.vue'
+
+const props = defineProps(['activityToEdit'])
 
 const activityStore = useActivityStore()
 const modalStore = useModalStore()
 
 const { getFormattedDate } = useDateFormatter()
 
-const date = ref('')
-const title = ref('')
-const category = ref('')
-const startTime = ref('')
-const endTime = ref('')
-const notes = ref('')
-const mood = ref(3)
+const date = ref(props.activityToEdit.activityDate)
+const title = ref(props.activityToEdit.title)
+const category = ref(props.activityToEdit.category)
+const startTime = ref(props.activityToEdit.startTime)
+const endTime = ref(props.activityToEdit.endTime)
+const notes = ref(props.activityToEdit.notes)
+const mood = ref(props.activityToEdit.mood)
 
-async function createAnActivity() {
+async function updateAnActivity() {
     try {
-        const payload = {
-            'userId': '5f839465-daef-49d8-a9f7-0802762d938e',
-            'activityDate': date.value,
-            'title': title.value,
-            'category': category.value,
-            'startTime': startTime.value,
-            'endTime': endTime.value,
-            'notes': notes.value,
-            'mood': mood.value
-        }  
-        await activityStore.createAnActivity(payload)
-        await activityStore.getActivitiesByDate(date.value)
-        modalStore.closeAddActivityModal()
+        const response = await api.put(`/activities/update/${props.activityToEdit.id}`, {
+            "id": props.activityToEdit.id,
+            "activityDate": date.value,
+            "title": title.value,
+            "category": category.value,
+            "startTime": startTime.value,
+            "endTime": endTime.value,
+            "notes": notes.value,
+            "mood": mood.value,
+            "user": {
+                "id": "5f839465-daef-49d8-a9f7-0802762d938e"
+            }
+        })
+        activityStore.getActivitiesByDate(date.value)
+        modalStore.closeEditActivityModal()
         resetForm()
     } catch (error) {
-        console.log(`error->`,error)
+        console.log(`error->`, error)
     }
 }
 
@@ -93,10 +98,6 @@ function resetForm() {
     notes.value = ''
     mood.value = 3
 }
-
-onMounted(() => {
-    date.value = getFormattedDate()
-})
 </script>
 
 <style>

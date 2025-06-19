@@ -12,12 +12,11 @@ export const useActivityStore = defineStore('activity', () => {
     const { getFormattedDate } = useDateFormatter()
     const activityDate = ref(getFormattedDate())
 
-    async function getActivitiesByDate() {
+    async function getActivitiesByDate(date) {
         loading.value = true
         error.value = null
-
         try {
-            const response = await api.get(`/activities/byDate?userId=5f839465-daef-49d8-a9f7-0802762d938e&activityDate=${activityDate.value}`)
+            const response = await api.get(`/activities/byDate?userId=5f839465-daef-49d8-a9f7-0802762d938e&activityDate=${date}`)
             activities.value = response.data
         } catch (error) {
             console.log(`error->`, error)

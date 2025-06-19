@@ -21,21 +21,37 @@
                 <td>{{ activity.endTime }}</td>
                 <td>{{ activity.notes }}</td>
                 <td>{{ activity.mood }}</td>
-                <td><span class="material-symbols-outlined">edit</span></td>
-                <td><span class="material-symbols-outlined" @click="deleteAnActivity(activity.id)">delete</span></td>
+                <td>
+                    <span class="material-symbols-outlined" @click="openModal(activity)">edit</span>
+                </td>
+                <td>
+                    <span class="material-symbols-outlined" @click="deleteAnActivity(activity.id, activity.activityDate)">delete</span>
+                </td>
             </tr>
         </tbody>
+        <EditActivityModel v-if="modalStore.isEditActivityModalOpen" :activityToEdit></EditActivityModel>
     </table>
 </template>
 
 <script setup>
+import { ref } from 'vue'
 import { useActivityStore } from '@/stores/ActivityStore'
+import { useModalStore } from '@/stores/ModalStore'
+
+import EditActivityModel from '@/components/activity/EditActivityModel.vue'
 
 const activityStore = useActivityStore()
+const modalStore = useModalStore()
+const activityToEdit = ref(null)
 
-function deleteAnActivity(id) {
-    activityStore.deleteAnActivity(id)
-    activityStore.getActivitiesByDate()
+function openModal(activity) {
+    activityToEdit.value = activity
+    modalStore.openEditActivityModal()
+}
+
+async function deleteAnActivity(id, date) {
+    await activityStore.deleteAnActivity(id)
+    await activityStore.getActivitiesByDate(date)
 }
 </script>
 
@@ -57,7 +73,7 @@ thead {
     border-bottom: 1px solid #DDD;
 }
 
-tbody>tr {
+tbody tr {
     background-color: #FFF;
     border-bottom: 1px solid #DDD;
 }

@@ -70,6 +70,7 @@ function closeModal() {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     width: 90%;
     max-width: 500px;
+    max-height: 80%;
     display: flex;
     flex-direction: column;
     gap: 1rem;

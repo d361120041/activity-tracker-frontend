@@ -28,6 +28,7 @@ async function register() {
         })
         alert('註冊成功')
     } catch (error) {
+        console.log(`error->`,error)
         alert(`註冊失敗：${error.response.data.error}`)
     }
 }

@@ -66,7 +66,7 @@ const mood = ref(3)
 async function createAnActivity() {
     try {
         const payload = {
-            'userId': '5f839465-daef-49d8-a9f7-0802762d938e',
+            'userId': 'EBC34817-4062-4550-8AF7-33E06380A152',
             'activityDate': date.value,
             'title': title.value,
             'category': category.value,

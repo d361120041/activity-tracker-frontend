@@ -16,7 +16,7 @@ export const useActivityStore = defineStore('activity', () => {
         loading.value = true
         error.value = null
         try {
-            const response = await api.get(`/activities/byDate?userId=5f839465-daef-49d8-a9f7-0802762d938e&activityDate=${date}`)
+            const response = await api.get(`/activities/byDate?userId=EBC34817-4062-4550-8AF7-33E06380A152&activityDate=${date}`)
             activities.value = response.data
         } catch (error) {
             console.log(`error->`, error)
@@ -44,7 +44,7 @@ export const useActivityStore = defineStore('activity', () => {
         error.value = null
         try {
             if (confirm('確定刪除嗎？此動作無法復原')) {
-                const response = await api.delete(`/activities/delete/${id}?userId=5f839465-daef-49d8-a9f7-0802762d938e`)
+                const response = await api.delete(`/activities/delete/${id}?userId=EBC34817-4062-4550-8AF7-33E06380A152`)
             }
         } catch (error) {
             console.log(`error->`, error)

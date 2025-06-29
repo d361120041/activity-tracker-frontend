@@ -1,6 +1,6 @@
 <template>
     <div class="register-container">
-        <form class="register-form" @submit.prevent="register">
+        <form class="register-form" @submit.prevent="login">
             <label for="email">電子信箱</label>
             <input v-model="email" type="email" id="email" required>
 
@@ -14,25 +14,20 @@
 
 <script setup>
 import { ref } from 'vue'
+import { useUserStore } from '@/stores/UserStore.js'
 
-import api from '@/api/api.js'
+const userStore = useUserStore()
 
 const email = ref('')
 const password = ref('')
 
-async function register() {
-    try {
-        const response = await api.post(`/users/login`, {
-            "email": email.value,
-            "password": password.value
-        })
-        alert('登入成功')
-        console.log(`response->`,response.data)
-    } catch (error) {
-        console.log(`error->`,error)
-        alert(`登入失敗：${error.response.data}`)
-    }
+async function login() {
+    await userStore.login(
+        email.value, 
+        password.value
+    )
 }
+
 </script>
 
 <style scoped>

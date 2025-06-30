@@ -1,5 +1,6 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
+import router from '@/router/router.js'
 
 import api from '@/api/api.js'
 
@@ -19,13 +20,29 @@ export const useUserStore = defineStore('user', () => {
             alert('登入成功')
             accessToken.value = response.data.accessToken
         } catch (error) {
-            console.log(`error->`, error)
-            alert(`登入失敗：${error.response.data}`)
+            alert('登入失敗')
+            throw new Error('login error')
         }
+    }
+
+    async function logout() {
+        try {
+            await api.post('/users/logout')
+            setAccessToken(null)
+            alert('登出成功')
+            router.push('/user/login')
+        } catch (error) {
+            throw new Error('logout error')
+        }
+    }
+
+    function setAccessToken(token) {
+        accessToken.value = token
     }
 
     return {
         isLoading, error,
-        login, accessToken
+        login, logout, 
+        accessToken, setAccessToken
     }
 })

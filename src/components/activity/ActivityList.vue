@@ -12,7 +12,7 @@
                 <td colspan="2"></td>
             </tr>
         </thead>
-        <tbody>
+        <tbody v-if="userStore.accessToken">
             <tr v-for="activity in activityStore.activities">
                 <td>{{ activity.activityDate }}</td>
                 <td>{{ activity.title }}</td>
@@ -35,13 +35,16 @@
 
 <script setup>
 import { ref } from 'vue'
-import { useActivityStore } from '@/stores/ActivityStore'
-import { useModalStore } from '@/stores/ModalStore'
+import { useActivityStore } from '@/stores/ActivityStore.js'
+import { useModalStore } from '@/stores/ModalStore.js'
+import { useUserStore } from '@/stores/UserStore.js'
 
 import EditActivityModel from '@/components/activity/EditActivityModel.vue'
 
 const activityStore = useActivityStore()
 const modalStore = useModalStore()
+const userStore = useUserStore()
+
 const activityToEdit = ref(null)
 
 function openModal(activity) {

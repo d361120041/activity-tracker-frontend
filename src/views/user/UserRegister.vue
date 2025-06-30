@@ -16,6 +16,7 @@
 import { ref } from 'vue'
 
 import api from '@/api/api.js'
+import router from '@/router/router.js'
 
 const email = ref('')
 const password = ref('')
@@ -26,7 +27,8 @@ async function register() {
             "email": email.value,
             "password": password.value
         })
-        alert('註冊成功')
+        alert('註冊成功，請登入帳號')
+        router.push('/user/login')
     } catch (error) {
         console.log(`error->`,error)
         alert(`註冊失敗：${error.response.data.error}`)

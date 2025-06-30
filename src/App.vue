@@ -14,7 +14,6 @@
 
 <script setup>
 import NavigationBar from '@/views/NavigationBar.vue'
-
 </script>
 
 <style scoped>

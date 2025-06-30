@@ -15,6 +15,7 @@
 <script setup>
 import { ref } from 'vue'
 import { useUserStore } from '@/stores/UserStore.js'
+import router from '@/router/router'
 
 const userStore = useUserStore()
 
@@ -22,10 +23,19 @@ const email = ref('')
 const password = ref('')
 
 async function login() {
-    await userStore.login(
-        email.value, 
-        password.value
-    )
+    try {
+        await userStore.login(
+            email.value,
+            password.value
+        )
+        email.value = ''
+        password.value = ''
+        router.back()
+    } catch (error) {
+        console.log(`login error->`, error)
+        email.value = ''
+        password.value = ''
+    }
 }
 
 </script>

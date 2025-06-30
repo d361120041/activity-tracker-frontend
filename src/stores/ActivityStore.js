@@ -19,7 +19,6 @@ export const useActivityStore = defineStore('activity', () => {
             const response = await api.get(`/activities/byDate?userId=EBC34817-4062-4550-8AF7-33E06380A152&activityDate=${date}`)
             activities.value = response.data
         } catch (error) {
-            console.log(`error->`, error)
             error.value = error
         } finally {
             loading.value = false

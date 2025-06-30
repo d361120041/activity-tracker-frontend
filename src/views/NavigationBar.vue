@@ -13,14 +13,25 @@
             </ul>
         </div>
         <div class="login-container">
-            <router-link to="/user/login">登入</router-link>
+            <router-link to="/user/login" v-if="!userStore.accessToken">登入</router-link>
+            <a v-else @click="logout">登出</a>
             <router-link to="/user/register">註冊</router-link>
         </div>
     </nav>
 </template>
 
 <script setup>
+import { useUserStore } from '@/stores/UserStore.js'
 
+const userStore = useUserStore()
+
+async function logout() {
+    try {
+        await userStore.logout()
+    } catch (error) {
+        console.log(`error->`,error)
+    }
+}
 </script>
 
 <style scoped>

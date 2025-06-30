@@ -31,4 +31,8 @@ export const useModalStore = defineStore('modal', () => {
         isEditActivityModalOpen,
         openEditActivityModal, closeEditActivityModal
     }
-})
+},
+    {
+        persist: true,
+    }
+)

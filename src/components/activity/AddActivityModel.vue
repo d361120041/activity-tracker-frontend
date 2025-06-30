@@ -47,11 +47,13 @@ import { ref, onMounted } from 'vue'
 import { useActivityStore } from '@/stores/ActivityStore'
 import { useModalStore } from '@/stores/ModalStore'
 import { useDateFormatter } from '@/composables/useDateFormatter'
+import { useUserStore } from '@/stores/UserStore.js'
 
 import Modal from '@/components/Modal.vue'
 
 const activityStore = useActivityStore()
 const modalStore = useModalStore()
+const userStore = useUserStore()
 
 const { getFormattedDate } = useDateFormatter()
 
@@ -66,7 +68,7 @@ const mood = ref(3)
 async function createAnActivity() {
     try {
         const payload = {
-            'userId': 'EBC34817-4062-4550-8AF7-33E06380A152',
+            'userId': userStore.userId,
             'activityDate': date.value,
             'title': title.value,
             'category': category.value,

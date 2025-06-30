@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import { useDateFormatter } from '@/composables/useDateFormatter'
+import { useUserStore } from '@/stores/UserStore.js'
 
 import api from '@/api/api.js'
 
@@ -15,8 +16,9 @@ export const useActivityStore = defineStore('activity', () => {
     async function getActivitiesByDate(date) {
         loading.value = true
         error.value = null
+        const userStore = useUserStore()
         try {
-            const response = await api.get(`/activities/byDate?userId=EBC34817-4062-4550-8AF7-33E06380A152&activityDate=${date}`)
+            const response = await api.get(`/activities/byDate?userId=${userStore.userId}&activityDate=${date}`)
             activities.value = response.data
         } catch (error) {
             error.value = error
@@ -41,9 +43,10 @@ export const useActivityStore = defineStore('activity', () => {
     async function deleteAnActivity(id) {
         loading.value = true
         error.value = null
+        const userStore = useUserStore()
         try {
             if (confirm('確定刪除嗎？此動作無法復原')) {
-                const response = await api.delete(`/activities/delete/${id}?userId=EBC34817-4062-4550-8AF7-33E06380A152`)
+                const response = await api.delete(`/activities/delete/${id}?userId=${userStore.userId}`)
             }
         } catch (error) {
             console.log(`error->`, error)
@@ -61,4 +64,8 @@ export const useActivityStore = defineStore('activity', () => {
         createAnActivity,
         deleteAnActivity
     }
-})
+},
+    {
+        persist: true,
+    }
+)

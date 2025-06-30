@@ -10,6 +10,7 @@ export const useUserStore = defineStore('user', () => {
     const error = ref(null)
 
     const accessToken = ref(null)
+    const userId = ref(null)
 
     async function login(email, password) {
         try {
@@ -17,8 +18,11 @@ export const useUserStore = defineStore('user', () => {
                 "email": email,
                 "password": password
             })
+            if (response?.data) {
+                userId.value = response.data.userId
+                accessToken.value = response.data.accessToken
+            }
             alert('登入成功')
-            accessToken.value = response.data.accessToken
         } catch (error) {
             alert('登入失敗')
             throw new Error('login error')
@@ -28,6 +32,7 @@ export const useUserStore = defineStore('user', () => {
     async function logout() {
         try {
             await api.post('/users/logout')
+            userId.value = null
             setAccessToken(null)
             alert('登出成功')
             router.push('/user/login')
@@ -42,7 +47,12 @@ export const useUserStore = defineStore('user', () => {
 
     return {
         isLoading, error,
-        login, logout, 
-        accessToken, setAccessToken
+        login, logout,
+        accessToken, setAccessToken,
+        userId
     }
-})
+},
+    {
+        persist: true,
+    }
+)

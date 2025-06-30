@@ -47,6 +47,7 @@ import { ref } from 'vue'
 import { useActivityStore } from '@/stores/ActivityStore'
 import { useModalStore } from '@/stores/ModalStore'
 import { useDateFormatter } from '@/composables/useDateFormatter'
+import { useUserStore } from '@/stores/UserStore.js'
 
 import api from '@/api/api.js'
 import Modal from '@/components/Modal.vue'
@@ -55,6 +56,7 @@ const props = defineProps(['activityToEdit'])
 
 const activityStore = useActivityStore()
 const modalStore = useModalStore()
+const userStore = useUserStore()
 
 const { getFormattedDate } = useDateFormatter()
 
@@ -78,7 +80,7 @@ async function updateAnActivity() {
             "notes": notes.value,
             "mood": mood.value,
             "user": {
-                "id": "EBC34817-4062-4550-8AF7-33E06380A152"
+                "id": userStore.userId
             }
         })
         activityStore.getActivitiesByDate(date.value)

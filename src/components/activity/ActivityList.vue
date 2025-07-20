@@ -2,14 +2,14 @@
     <table>
         <thead>
             <tr>
-                <td>日期</td>
-                <td>名稱</td>
-                <td>分類</td>
-                <td>開始時間</td>
-                <td>結束時間</td>
-                <td>備註</td>
-                <td>心情</td>
-                <td colspan="2"></td>
+                <th>日期</th>
+                <th>名稱</th>
+                <th>分類</th>
+                <th>開始時間</th>
+                <th>結束時間</th>
+                <th>備註</th>
+                <th>心情</th>
+                <th colspan="2"></th>
             </tr>
         </thead>
         <tbody v-if="userStore.accessToken">
@@ -64,9 +64,9 @@ table {
     box-shadow: 0 0.5px 5px #CCC;
 }
 
-table,
-td {
+table,td, th {
     text-align: center;
+    font-weight: 400;
     border-collapse: collapse;
     padding: 1rem;
 }

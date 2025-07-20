@@ -10,6 +10,9 @@
                 <li class="nav-item">
                     <router-link to="/activity/home">我的活動</router-link>
                 </li>
+                <li class="nav-item">
+                    <router-link to="/activity/MainPage">活動主頁</router-link>
+                </li>
             </ul>
         </div>
         <div class="login-container">

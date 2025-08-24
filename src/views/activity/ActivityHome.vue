@@ -43,7 +43,7 @@ onMounted(() => {
 
 <style scoped>
 .activity-main {
-    width: 800px;
+    width: 700px;
     margin: 1rem auto;
     padding: 1rem;
     border-radius: 1rem;

@@ -3,3 +3,37 @@ html, body {
     margin: 0;
     height: 100%;
 }
+
+table {
+    margin: 0 auto;
+    box-shadow: 0 0.5px 5px #CCC;
+}
+
+table,
+td,
+th {
+    text-align: center;
+    font-weight: 400;
+    border-collapse: collapse;
+    padding: 1rem 0.8rem;
+}
+
+thead {
+    background-color: #AACCFFAA;
+    border-bottom: 1px solid #DDD;
+}
+
+tbody tr {
+    background-color: #FFF;
+    border-bottom: 1px solid #DDD;
+}
+
+td span:hover {
+    transform: scale(1.01) translateY(-1px);
+    cursor: pointer;
+}
+
+td span:active {
+    transform: scale(1) translateY(0);
+    cursor: pointer;
+}

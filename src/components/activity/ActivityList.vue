@@ -17,8 +17,8 @@
                 <td>{{ activity.activityDate }}</td>
                 <td>{{ activity.title }}</td>
                 <td>{{ activity.category }}</td>
-                <td>{{ activity.startTime }}</td>
-                <td>{{ activity.endTime }}</td>
+                <td>{{ activity.startTime.substring(0, 5) }}</td>
+                <td>{{ activity.endTime.substring(0, 5) }}</td>
                 <td>{{ activity.notes }}</td>
                 <td>{{ activity.mood }}</td>
                 <td>
@@ -59,35 +59,5 @@ async function deleteAnActivity(id, date) {
 </script>
 
 <style scoped>
-table {
-    margin: 0 auto;
-    box-shadow: 0 0.5px 5px #CCC;
-}
 
-table,td, th {
-    text-align: center;
-    font-weight: 400;
-    border-collapse: collapse;
-    padding: 1rem;
-}
-
-thead {
-    background-color: #AACCFFAA;
-    border-bottom: 1px solid #DDD;
-}
-
-tbody tr {
-    background-color: #FFF;
-    border-bottom: 1px solid #DDD;
-}
-
-td span:hover {
-    transform: scale(1.01) translateY(-1px);
-    cursor: pointer;
-}
-
-td span:active {
-    transform: scale(1) translateY(0);
-    cursor: pointer;
-}
 </style>

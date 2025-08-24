@@ -1,98 +1,123 @@
 <template>
-    <button @click="generateReport">產生報表</button>
-    <table>
-        <thead>
-            <tr>
-                <th>
-                    <input type="checkbox">
-                </th>
-                <th>日期</th>
-                <th>名稱</th>
-                <th>分類</th>
-                <th>開始時間</th>
-                <th>結束時間</th>
-                <th>備註</th>
-                <th>心情</th>
-                <th>建立日期</th>
-                <th>修改日期</th>
-                <th>使用者</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr v-for="activity in activities">
-                <th>
-                    <input type="checkbox" @click="toggleCheck(activity.id)">
-                </th>
-                <td>{{ activity.activityDate }}</td>
-                <td>{{ activity.title }}</td>
-                <td>{{ activity.category }}</td>
-                <td>{{ activity.startTime }}</td>
-                <td>{{ activity.endTime }}</td>
-                <td>{{ activity.notes }}</td>
-                <td>{{ activity.mood }}</td>
-                <td>{{ activity.createdAt }}</td>
-                <td>{{ activity.updateAt }}</td>
-                <td>{{ activity.user.email }}</td>
-            </tr>
-        </tbody>
-    </table>
+    <div class="activity-main-page">
+        <nav class="toolbar">
+            <button @click="generateReport" class="toolbar-button">產生報表</button>
+            <button @click="downloadReport" class="toolbar-button">下載報表</button>
+        </nav>
+        <main class="activity-list">
+            <table>
+                <thead>
+                    <tr>
+                        <th>
+                            <input type="checkbox" v-model="isAllChecked">
+                        </th>
+                        <th></th>
+                        <th>日期</th>
+                        <th>名稱</th>
+                        <th>分類</th>
+                        <th>時間</th>
+                        <th>備註</th>
+                        <th>心情</th>
+                        <th>使用者</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="(activity, index) in activities">
+
+                        <td>
+                            <input type="checkbox" :value="activity.id" v-model="checkedList">
+                        </td>
+                        <td>{{ index + 1 }}</td>
+                        <td>{{ activity.activityDate }}</td>
+                        <td>{{ activity.title }}</td>
+                        <td>{{ activity.category }}</td>
+                        <td>{{ `${activity.startTime.substring(0, 5)} - ${activity.endTime.substring(0, 5)}` }}</td>
+                        <td>{{ activity.notes }}</td>
+                        <td>{{ activity.mood }}</td>
+                        <td>{{ activity.userEmail }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </main>
+    </div>
 </template>
 
 <script setup>
-import { ref, reactive, onMounted } from 'vue'
+import { ref, reactive, onMounted, watch, computed } from 'vue'
 import api from '@/api/api.js'
 
 const activities = ref([])
+const checkedList = ref([])
+const reportName = ref('')
 
-const activity = reactive({
-    title: "",
-    category: "",
-    activityDate: "",
-    startTime: "",
-    endTime: "",
-    notes: "",
-    mood: null,
-    createdAt: '',
-    updateAt: '',
-    user: {
-        email: ''
+const isAllChecked = computed({
+    get() {
+        return activities.value.length > 0 && activities.value.length === checkedList.value.length
+    },
+    set(value) {
+        if (value) {
+            checkedList.value = activities.value.map(activity => activity.id)
+        } else {
+            checkedList.value = []
+        }
     }
 })
 
-const checkedList = []
-
-function toggleCheck(id) {
-    if (checkedList.includes(id)) {
-        const index = checkedList.indexOf(id)
-        if (index !== -1) {
-            checkedList.splice(index, 1)
-        } else {
-            checkedList.push(id)
-        }
+async function generateReport() {
+    if (checkedList.value.length) {
+        const response = await api.post('/activities/generateReport', {
+            ids: checkedList.value
+        })
+        reportName.value = response.data
+        alert(`[報表產生成功]：${reportName.value}`)
     } else {
-        checkedList.push(id)
+        alert('請選擇一個項目')
     }
 }
 
-async function generateReport() {
-    const response = await api.post('/activities/csv', {
-        ids: checkedList
-    })
+async function downloadReport() {
+    if (reportName.value) {
+        try {
+            const response = await api.get(`/activities/download/${reportName.value}`, {
+                responseType: 'blob'
+            })
+
+            const blob = new Blob([response.data], { type: response.headers['content-type'] })
+            const url = window.URL.createObjectURL(blob)
+            const a = document.createElement('a')
+            a.style.display = 'none'
+            a.href = url
+
+            const contentDisposition = response.headers['Content-Disposition']
+            let fileName = reportName.value
+            if (contentDisposition) {
+                const matches = /filename="(.+)"/.exec(contentDisposition)
+                if (matches && matches[1]) {
+                    fileName = matches[1]
+                }
+            }
+            a.download = fileName
+
+            document.body.appendChild(a)
+            a.click()
+            window.URL.revokeObjectURL(url)
+            document.body.removeChild(a)
+            console.log(`[檔案下載完成]：${fileName}`);
+        } catch (error) {
+            alert('[檔案下載失敗]：', error)
+        }
+    } else {
+        alert('請先產生報表')
+    }
 }
 
 async function findAllActivities() {
     const response = await api('/activities/all')
-    activities.value = response.data
-    activity.activityDate = response.data?.activityDate
-    activity.title = response.data?.title
-    activity.category = response.data?.category
-    activity.startTime = response.data?.startTime
-    activity.endTime = response.data?.endTime
-    activity.notes = response.data?.notes
-    activity.mood = response.data?.mood
-    activity.createdAt = response.data?.createdAt
-    activity.updateAt = response.data?.updateAt
-    activity.user.email = response.data?.user?.email
+    if (Array.isArray(response.data)) {
+        activities.value = response.data
+    } else {
+        alert('無法取得活動')
+    }
 }
 
 onMounted(() => {
@@ -101,37 +126,28 @@ onMounted(() => {
 </script>
 
 <style scoped>
-table {
+.activity-main-page {
+    width: 950px;
     margin: 0 auto;
-    box-shadow: 0 0.5px 5px #CCC;
+    padding: 0.5rem 10rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
 }
 
-table,
-td,
-th {
-    text-align: center;
-    font-weight: 400;
-    border-collapse: collapse;
-    padding: 1rem;
+.toolbar {
+    padding: 0.8rem 1.6rem;
+    display: flex;
+    gap: 1rem;
 }
 
-thead {
-    background-color: #AACCFFAA;
-    border-bottom: 1px solid #DDD;
-}
-
-tbody tr {
+.toolbar-button {
+    padding: 10px 15px;
+    border: 2px solid #333;
+    border-radius: 4px;
+    cursor: pointer;
     background-color: #FFF;
-    border-bottom: 1px solid #DDD;
-}
-
-td span:hover {
-    transform: scale(1.01) translateY(-1px);
-    cursor: pointer;
-}
-
-td span:active {
-    transform: scale(1) translateY(0);
-    cursor: pointer;
+    color: #000;
+    text-decoration: none;
 }
 </style>

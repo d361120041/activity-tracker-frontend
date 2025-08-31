@@ -113,8 +113,8 @@ async function downloadReport() {
 
 async function findAllActivities() {
     const response = await api('/activities/all')
-    if (Array.isArray(response.data)) {
-        activities.value = response.data
+    if (response.data && Array.isArray(response.data.activities)) {
+        activities.value = response.data.activities
     } else {
         alert('無法取得活動')
     }
